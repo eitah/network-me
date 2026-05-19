@@ -28,3 +28,23 @@ resource "google_compute_firewall" "origin" {
   target_tags   = ["origin"]
   source_ranges = ["0.0.0.0/0"]
 }
+
+module "edge" {
+  source   = "./modules/nginx-proxy"
+  name     = "edge"
+  upstream = "${module.origin.internal_ip}:3000"
+  tags     = ["toy", "edge"]
+}
+
+resource "google_compute_firewall" "edge" {
+  name    = "allow-edge"
+  network = "default"
+
+  allow {
+    protocol = "tcp"
+    ports    = ["80"]
+  }
+
+  target_tags   = ["toy", "edge"]
+  source_ranges = ["0.0.0.0/0"]
+}
