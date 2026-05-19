@@ -3,7 +3,11 @@ server {
   location / {
     proxy_pass http://${UPSTREAM};
     proxy_set_header Host $host;
+    %{~ if true ~}
     proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    %{~ else ~}
+    proxy_set_header X-Forwarded-For $remote_addr;
+    %{~ endif ~}
     proxy_set_header X-Real-IP $remote_addr;
   }
 }
