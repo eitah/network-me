@@ -17,7 +17,10 @@ resource "google_compute_instance" "this" {
   }
 
   metadata = {
-    nginx-conf = templatefile("${path.module}/nginx.conf.tftpl", { UPSTREAM = var.upstream })
+    nginx-conf = templatefile("${path.module}/nginx.conf.tftpl", {
+      UPSTREAM = var.upstream
+      VERSION  = 2
+    })
     startup-script = <<-EOF
       #!/bin/bash
       set -eo pipefail
